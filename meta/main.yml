@@ -1,0 +1,18 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: awinterstein
+  description: Git version control system
+  license: MIT License
+  min_ansible_version: 2.2
+  platforms:
+  - name: Debian
+    versions:
+    - all
+  - name: Ubuntu
+    versions:
+    - all
+  galaxy_tags:
+    - development
+    - system

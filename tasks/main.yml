@@ -1,0 +1,34 @@
+---
+- name: Install Git
+  apt: name={{item}} state=installed
+  with_items:
+    - git
+  become: true
+- name: Make sure that category exists in Git config
+  lineinfile:
+    create: yes
+    destfile: "{{homedir}}/.gitconfig"
+    line: '[user]'
+- name: Set name for Git
+  lineinfile:
+    destfile: "{{homedir}}/.gitconfig"
+    regexp: 'name = '
+    insertafter: '^[user]'
+    line: "\tname = {{username}}"
+- name: Set mail for Git
+  lineinfile:
+    destfile: "{{homedir}}/.gitconfig"
+    regexp: 'email = '
+    insertafter: '^[user]'
+    line: "\temail = {{usermail}}"
+- name: Make sure that category 'push' exists in Git config
+  lineinfile:
+    create: yes
+    destfile: "{{homedir}}/.gitconfig"
+    line: '[push]'
+- name: Set push to simple for Git
+  lineinfile:
+    destfile: "{{homedir}}/.gitconfig"
+    regexp: 'default = '
+    insertafter: '^[user]'
+    line: "\tdefault = simple"
