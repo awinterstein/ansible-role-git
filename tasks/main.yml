@@ -1,8 +1,13 @@
 ---
+- script: git-lfs-install.deb.sh
+  args:
+    creates: /etc/apt/sources.list.d/github_git-lfs.list
+  become: true
 - name: Install Git
   apt: name={{item}} state=installed
   with_items:
     - git
+    - git-lfs
   become: true
 - name: Make sure that category exists in Git config
   lineinfile:
