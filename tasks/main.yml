@@ -4,7 +4,7 @@
     creates: /etc/apt/sources.list.d/github_git-lfs.list
   become: true
 - name: Install Git
-  apt: name={{item}} state=installed
+  apt: name={{item}} state=installed update_cache=yes
   with_items:
     - git
     - git-lfs
