@@ -9,43 +9,30 @@
     - git
     - git-lfs
   become: true
-- name: Make sure that category exists in Git config
-  lineinfile:
-    create: yes
-    destfile: "{{homedir}}/.gitconfig"
-    line: '[user]'
 - name: Set name for Git
-  lineinfile:
-    destfile: "{{homedir}}/.gitconfig"
-    regexp: 'name = '
-    insertafter: '^[user]'
-    line: "\tname = {{username}}"
+  ini_file:
+    path: "{{homedir}}/.gitconfig"
+    section: user
+    option: name
+    value: "{{username}}"
+  when: username is defined
 - name: Set mail for Git
-  lineinfile:
-    destfile: "{{homedir}}/.gitconfig"
-    regexp: 'email = '
-    insertafter: '^[user]'
-    line: "\temail = {{usermail}}"
-- name: Make sure that category 'push' exists in Git config
-  lineinfile:
-    create: yes
-    destfile: "{{homedir}}/.gitconfig"
-    line: '[push]'
+  ini_file:
+    path: "{{homedir}}/.gitconfig"
+    section: user
+    option: email
+    value: "{{usermail}}"
+  when: usermail is defined
 - name: Set push to simple for Git
-  lineinfile:
-    destfile: "{{homedir}}/.gitconfig"
-    regexp: 'default = '
-    insertafter: '^[user]'
-    line: "\tdefault = simple"
-- name: Make sure that category 'core' exists in Git config
-  lineinfile:
-    create: yes
-    destfile: "{{homedir}}/.gitconfig"
-    line: '[core]'
+  ini_file:
+    path: "{{homedir}}/.gitconfig"
+    section: push
+    option: default
+    value: simple
 - name: Set askpass if it was defined
-  lineinfile:
-    destfile: "{{homedir}}/.gitconfig"
-    regexp: 'askpass = '
-    insertafter: '^[core]'
-    line: "\taskpass = {{askpass}}"
+  ini_file:
+    path: "{{homedir}}/.gitconfig"
+    section: core
+    option: askpass
+    value: "{{askpass}}"
   when: askpass is defined
