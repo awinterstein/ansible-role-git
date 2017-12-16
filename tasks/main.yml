@@ -37,3 +37,15 @@
     regexp: 'default = '
     insertafter: '^[user]'
     line: "\tdefault = simple"
+- name: Make sure that category 'core' exists in Git config
+  lineinfile:
+    create: yes
+    destfile: "{{homedir}}/.gitconfig"
+    line: '[core]'
+- name: Set askpass if it was defined
+  lineinfile:
+    destfile: "{{homedir}}/.gitconfig"
+    regexp: 'askpass = '
+    insertafter: '^[core]'
+    line: "\taskpass = {{askpass}}"
+  when: askpass is defined
