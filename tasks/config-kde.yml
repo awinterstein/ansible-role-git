@@ -1,0 +1,14 @@
+- name: Select editor for git-cola
+  ini_file:
+    path: "{{homedir}}/.gitconfig"
+    section: gui
+    option: editor
+    value: "kwrite"
+  when: git_install_git_cola
+- name: Select diff font for git-cola
+  ini_file:
+    path: "{{homedir}}/.gitconfig"
+    section: cola
+    option: fontdiff
+    value: "Hack,10,-1,0,50,0,0,0,0,0"
+  when: git_install_git_cola

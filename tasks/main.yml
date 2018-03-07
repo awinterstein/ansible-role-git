@@ -49,3 +49,6 @@
     option: askpass
     value: "{{askpass}}"
   when: askpass is defined
+
+- include_tasks: config-kde.yml
+  when: desktop_environment is defined and desktop_environment == "KDE"
