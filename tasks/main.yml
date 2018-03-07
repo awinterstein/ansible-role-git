@@ -9,6 +9,19 @@
     - git
     - git-lfs
   become: true
+- name: Install Git GUI
+  apt: name={{item}} state=installed
+  with_items:
+    - git-gui
+    - gitk
+  become: true
+  when: git_install_gui
+- name: Install Git Cola
+  apt: name={{item}} state=installed
+  with_items:
+    - git-cola
+  become: true
+  when: git_install_git_cola
 - name: Set name for Git
   ini_file:
     path: "{{homedir}}/.gitconfig"
