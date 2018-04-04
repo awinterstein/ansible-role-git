@@ -4,20 +4,20 @@
     creates: /etc/apt/sources.list.d/github_git-lfs.list
   become: true
 - name: Install Git
-  apt: name={{item}} state=installed update_cache=yes
+  apt: name={{item}} state=present update_cache=yes
   with_items:
     - git
     - git-lfs
   become: true
 - name: Install Git GUI
-  apt: name={{item}} state=installed
+  apt: name={{item}} state=present
   with_items:
     - git-gui
     - gitk
   become: true
   when: git_install_gui
 - name: Install Git Cola
-  apt: name={{item}} state=installed
+  apt: name={{item}} state=present
   with_items:
     - git-cola
   become: true
