@@ -1,9 +1,5 @@
 ---
-- script: git-lfs-install.deb.sh
-  args:
-    creates: /etc/apt/sources.list.d/github_git-lfs.list
-  become: true
-  when: not (ansible_distribution == "Ubuntu" and ansible_distribution_version >= "18.10")
+- include_tasks: lfs-repo.yml
 - name: Install Git
   apt: name={{item}} state=present update_cache=yes
   with_items:

@@ -1,0 +1,14 @@
+- name: Prepare apt for installing git lfs
+  block:
+
+  - script: git-lfs-install.deb.sh
+    args:
+      creates: /etc/apt/sources.list.d/github_git-lfs.list
+
+  - apt_key:
+      id: 6B05F25D762E3157
+      url: https://packagecloud.io/github/git-lfs/gpgkey
+      state: present
+
+  become: true
+  when: not (ansible_distribution == "Ubuntu" and ansible_distribution_version >= "18.10")
