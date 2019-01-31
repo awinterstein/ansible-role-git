@@ -68,6 +68,12 @@
     value: "true"
   when: git_rebase_default is defined and git_rebase_default == true
 
+- name: Enable colors for the bash prompt
+  lineinfile:
+    path: "{{homedir}}/.bashrc"
+    regexp: "force_color_prompt="
+    line: "force_color_prompt=yes"
+
 - name: Set colorful prompt showing the git status
   lineinfile:
     path: "{{homedir}}/.bashrc"
