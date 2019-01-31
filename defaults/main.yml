@@ -1,3 +1,4 @@
 git_install_gui: false
 git_install_git_cola: false
+git_install_scm_breeze: false
 git_rebase_default: true
