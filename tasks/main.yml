@@ -19,6 +19,7 @@
     - git-cola
   become: true
   when: git_install_git_cola
+
 - name: Set name for Git
   ini_file:
     path: "{{homedir}}/.gitconfig"
@@ -46,6 +47,14 @@
     option: askpass
     value: "{{askpass}}"
   when: askpass is defined
+- name: Enable rebase for git pull by default
+  ini_file:
+    path: "{{homedir}}/.gitconfig"
+    section: pull
+    option: rebase
+    value: "true"
+  when: git_rebase_default is defined and git_rebase_default == true
+
 - name: Set colorful prompt showing the git status
   lineinfile:
     path: "{{homedir}}/.bashrc"

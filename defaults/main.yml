@@ -1,2 +1,3 @@
 git_install_gui: false
 git_install_git_cola: false
+git_rebase_default: true
