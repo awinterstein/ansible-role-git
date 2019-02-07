@@ -1,22 +1,25 @@
 ---
 - include_tasks: lfs-repo.yml
 - name: Install Git
-  apt: name={{item}} state=present update_cache=yes
-  with_items:
-    - git
-    - git-lfs
+  apt: name={{packages}} state=present update_cache=yes
+  vars:
+    packages:
+      - git
+      - git-lfs
   become: true
 - name: Install Git GUI
-  apt: name={{item}} state=present
-  with_items:
-    - git-gui
-    - gitk
+  apt: name={{packages}} state=present
+  vars:
+    packages:
+      - git-gui
+      - gitk
   become: true
   when: git_install_gui
 - name: Install Git Cola
-  apt: name={{item}} state=present
-  with_items:
-    - git-cola
+  apt: name={{packages}} state=present
+  vars:
+    packages:
+      - git-cola
   become: true
   when: git_install_git_cola
 
