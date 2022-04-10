@@ -1,71 +1,81 @@
 ---
 - include_tasks: lfs-repo.yml
+
 - name: Install Git
-  apt: name={{packages}} state=present update_cache=yes
-  vars:
-    packages:
-      - git
-      - git-lfs
+  apt:
+    name: [ git, git-lfs ]
   become: true
+
 - name: Install Git GUI
-  apt: name={{packages}} state=present
-  vars:
-    packages:
-      - git-gui
-      - gitk
+  apt:
+    name: [ git-gui, gitk ]
   become: true
   when: git_install_gui
+
 - name: Install Git Cola
-  apt: name={{packages}} state=present
-  vars:
-    packages:
-      - git-cola
+  apt:
+    name: [ git-cola ]
   become: true
   when: git_install_git_cola
 
 - name: Install SCM Breeze
   git:
     repo: https://github.com/scmbreeze/scm_breeze.git
-    dest: "{{homedir}}/.scm_breeze"
+    dest: "{{ ansible_env.HOME }}/.scm_breeze"
     depth: 1
     version: "dec2fff0bf4a5160837e6c1b92470336a60c2a98"
   when: git_install_scm_breeze is defined and git_install_scm_breeze == true
+
 - name: Enable SCM Breeze
-  shell: "{{homedir}}/.scm_breeze/install.sh"
+  shell: "{{ ansible_env.HOME }}/.scm_breeze/install.sh"
   args:
-    creates: "{{homedir}}/.scmbrc"
+    creates: "{{ ansible_env.HOME }}/.scmbrc"
+  when: git_install_scm_breeze is defined and git_install_scm_breeze == true
+
+- name: Add bash aliases for more applications for SCM breeze
+  lineinfile:
+    path: "{{ ansible_env.HOME }}/.bash_aliases"
+    regexp: 'alias {{item.alias}}='
+    line: 'alias {{item.alias}}="exec_scmb_expand_args {{item.command}}"'
+  with_items:
+    - { alias: "kate", command: "/usr/bin/kate" }
+    - { alias: "code", command: "/usr/bin/code" }
   when: git_install_scm_breeze is defined and git_install_scm_breeze == true
 
 - name: Set name for Git
   ini_file:
-    path: "{{homedir}}/.gitconfig"
+    path: "{{ ansible_env.HOME }}/.gitconfig"
     section: user
     option: name
-    value: "{{username}}"
+    value: "{{ username }}"
   when: username is defined
+
 - name: Set mail for Git
   ini_file:
-    path: "{{homedir}}/.gitconfig"
+    path: "{{ ansible_env.HOME }}/.gitconfig"
     section: user
     option: email
-    value: "{{usermail}}"
+    value: "{{ usermail }}"
   when: usermail is defined
+
 - name: Set push to simple for Git
   ini_file:
-    path: "{{homedir}}/.gitconfig"
+    path: "{{ ansible_env.HOME }}/.gitconfig"
     section: push
     option: default
     value: simple
+
 - name: Set askpass if it was defined
   ini_file:
-    path: "{{homedir}}/.gitconfig"
+    path: "{{ ansible_env.HOME }}/.gitconfig"
     section: core
     option: askpass
-    value: "{{askpass}}"
+    value: "{{ askpass }}"
   when: askpass is defined
+
 - name: Enable rebase for git pull by default
   ini_file:
-    path: "{{homedir}}/.gitconfig"
+    path: "{{ ansible_env.HOME }}/.gitconfig"
     section: pull
     option: rebase
     value: "true"
@@ -73,13 +83,13 @@
 
 - name: Enable colors for the bash prompt
   lineinfile:
-    path: "{{homedir}}/.bashrc"
+    path: "{{ ansible_env.HOME }}/.bashrc"
     regexp: "force_color_prompt="
     line: "force_color_prompt=yes"
 
 - name: Set colorful prompt showing the git status
   lineinfile:
-    path: "{{homedir}}/.bashrc"
+    path: "{{ ansible_env.HOME }}/.bashrc"
     regexp: 'PS1=.*\\033'
     line: "PS1='`if [ $? = 0 ]; then echo \"\\[\\e[32m\\] ✔ \"; else echo \"\\[\\e[31m\\] ✘ \"; fi`\\[\\033[01;32m\\]\\u@\\h\\[\\033[00m\\]:\\[\\e[01;34m\\]\\w\\[\\e[00;34m\\] `(( $(git status --porcelain 2>/dev/null | wc -l) == 0 )) && echo \"\\[\\e[01;32m\\]\" || ( (( $(git status --porcelain --untracked-files=no 2>/dev/null | wc -l) > 0 )) && echo \"\\[\\e[01;31m\\]\" ) || echo \"\\[\\e[01;33m\\]\"`$(__git_ps1 \"(%s)\")`echo \"\\[\\e[00m\\]\"`\\$ '"
   when: git_enable_bash_prompt == true
@@ -87,7 +97,7 @@
 - name: Make sure that the file for bash aliases exists
   copy:
     content: ""
-    dest: "{{homedir}}/.bash_aliases"
+    dest: "{{ ansible_env.HOME }}/.bash_aliases"
     force: no
 
 - include_tasks: config-kde.yml

@@ -10,5 +10,9 @@
       url: https://packagecloud.io/github/git-lfs/gpgkey
       state: present
 
+  - apt:
+      update_cache: yes
+    become: true
+
   become: true
   when: not (ansible_distribution == "Ubuntu" and ansible_distribution_version >= "18.10")

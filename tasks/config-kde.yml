@@ -1,6 +1,6 @@
 - name: Select editor for git-cola
   ini_file:
-    path: "{{homedir}}/.gitconfig"
+    path: "{{ ansible_env.HOME }}/.gitconfig"
     section: gui
     option: editor
     value: "kwrite"
@@ -8,16 +8,8 @@
 
 - name: Select diff font for git-cola
   ini_file:
-    path: "{{homedir}}/.gitconfig"
+    path: "{{ ansible_env.HOME }}/.gitconfig"
     section: cola
     option: fontdiff
     value: "Hack,10,-1,0,50,0,0,0,0,0"
   when: git_install_git_cola
-
-- name: Add bash aliases for KDE applications for SCM breeze
-  lineinfile:
-    path: "{{homedir}}/.bash_aliases"
-    regexp: 'alias {{item.alias}}='
-    line: 'alias {{item.alias}}="exec_scmb_expand_args {{item.command}}"'
-  with_items:
-    - { alias: "kate", command: "/usr/bin/kate" }
