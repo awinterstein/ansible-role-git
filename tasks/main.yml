@@ -22,8 +22,7 @@
   git:
     repo: https://github.com/scmbreeze/scm_breeze.git
     dest: "{{ ansible_env.HOME }}/.scm_breeze"
-    depth: 1
-    version: "dec2fff0bf4a5160837e6c1b92470336a60c2a98"
+    version: "b53d1ed3a2eb77b7c53455f436f2a64e9d9390e7"
   when: git_install_scm_breeze is defined and git_install_scm_breeze == true
 
 - name: Enable SCM Breeze
