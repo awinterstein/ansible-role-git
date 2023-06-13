@@ -36,6 +36,7 @@
     path: "{{ ansible_env.HOME }}/.bash_aliases"
     regexp: 'alias {{item.alias}}='
     line: 'alias {{item.alias}}="exec_scmb_expand_args {{item.command}}"'
+    create: yes
   with_items:
     - { alias: "kate", command: "/usr/bin/kate" }
     - { alias: "code", command: "/usr/bin/code" }
@@ -85,12 +86,14 @@
     path: "{{ ansible_env.HOME }}/.bashrc"
     regexp: "force_color_prompt="
     line: "force_color_prompt=yes"
+    create: yes
 
 - name: Set colorful prompt showing the git status
   lineinfile:
     path: "{{ ansible_env.HOME }}/.bashrc"
     regexp: 'PS1=.*\\033'
     line: "PS1='`if [ $? = 0 ]; then echo \"\\[\\e[32m\\] ✔ \"; else echo \"\\[\\e[31m\\] ✘ \"; fi`\\[\\033[01;32m\\]\\u@\\h\\[\\033[00m\\]:\\[\\e[01;34m\\]\\w\\[\\e[00;34m\\] `(( $(git status --porcelain 2>/dev/null | wc -l) == 0 )) && echo \"\\[\\e[01;32m\\]\" || ( (( $(git status --porcelain --untracked-files=no 2>/dev/null | wc -l) > 0 )) && echo \"\\[\\e[01;31m\\]\" ) || echo \"\\[\\e[01;33m\\]\"`$(__git_ps1 \"(%s)\")`echo \"\\[\\e[00m\\]\"`\\$ '"
+    create: yes
   when: git_enable_bash_prompt == true
 
 - name: Make sure that the file for bash aliases exists
