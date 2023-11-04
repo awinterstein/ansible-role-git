@@ -1,0 +1,24 @@
+---
+- name: Install Bash Git prompt
+  git:
+    repo: https://github.com/magicmonty/bash-git-prompt.git
+    dest: "{{ ansible_env.HOME }}/.bash_git_prompt"
+    version: "c4f5cd496edb3fe732263b759f3fc4c3e8da6a95"
+  when: git_install_scm_breeze is defined and git_install_scm_breeze == true
+
+- name: Copy Bash Git prompt color definitions for Ubuntu
+  copy:
+    src: git-prompt-colors.sh
+    dest: "{{ ansible_env.HOME }}/.git-prompt-colors.sh"
+  when: ansible_distribution == "Ubuntu"
+
+- name: Copy source script for Bash Git prompt
+  copy:
+    src: bashrc.gitprompt
+    dest: "{{ ansible_env.HOME }}/.bashrc.gitprompt"
+
+- name: Enable Bash Git prompt
+  lineinfile:
+    path: "{{ ansible_env.HOME }}/.bashrc"
+    regexp: "gitprompt.sh"
+    line: '[ -s "{{ ansible_env.HOME }}/.bashrc.gitprompt" ] && source "{{ ansible_env.HOME }}/.bashrc.gitprompt"'

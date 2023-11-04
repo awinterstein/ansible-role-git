@@ -3,18 +3,18 @@
 
 - name: Install Git
   apt:
-    name: [ git, git-lfs ]
+    name: [git, git-lfs]
   become: true
 
 - name: Install Git GUI
   apt:
-    name: [ git-gui, gitk ]
+    name: [git-gui, gitk]
   become: true
   when: git_install_gui
 
 - name: Install Git Cola
   apt:
-    name: [ git-cola ]
+    name: [git-cola]
   become: true
   when: git_install_git_cola
 
@@ -34,7 +34,7 @@
 - name: Add bash aliases for more applications for SCM breeze
   lineinfile:
     path: "{{ ansible_env.HOME }}/.bash_aliases"
-    regexp: 'alias {{item.alias}}='
+    regexp: "alias {{item.alias}}="
     line: 'alias {{item.alias}}="exec_scmb_expand_args {{item.command}}"'
     create: yes
   with_items:
@@ -88,11 +88,11 @@
     line: "force_color_prompt=yes"
     create: yes
 
-- name: Set colorful prompt showing the git status
+- name: Set colorful prompt showing the last command status
   lineinfile:
     path: "{{ ansible_env.HOME }}/.bashrc"
     regexp: 'PS1=.*\\033'
-    line: "PS1='`if [ $? = 0 ]; then echo \"\\[\\e[32m\\] ✔ \"; else echo \"\\[\\e[31m\\] ✘ \"; fi`\\[\\033[01;32m\\]\\u@\\h\\[\\033[00m\\]:\\[\\e[01;34m\\]\\w\\[\\e[00;34m\\] `(( $(git status --porcelain 2>/dev/null | wc -l) == 0 )) && echo \"\\[\\e[01;32m\\]\" || ( (( $(git status --porcelain --untracked-files=no 2>/dev/null | wc -l) > 0 )) && echo \"\\[\\e[01;31m\\]\" ) || echo \"\\[\\e[01;33m\\]\"`$(__git_ps1 \"(%s)\")`echo \"\\[\\e[00m\\]\"`\\$ '"
+    line: "PS1='`if [ $? = 0 ]; then echo \"\\[\\e[32m\\] ✔ \"; else echo \"\\[\\e[31m\\] ✘ \"; fi`\\[\\033[01;32m\\]\\u@\\h\\[\\033[00m\\]:\\[\\e[01;34m\\]\\w\\[\\e[00;34m\\] `echo \"\\[\\e[00m\\]\"`\\$ '"
     create: yes
   when: git_enable_bash_prompt == true
 
@@ -110,6 +110,9 @@
   with_items:
     - git-clean-branches
   become: true
+
+- include: bash-git-prompt.yml
+  when: git_enable_bash_prompt == true
 
 - include_tasks: config-kde.yml
   when: desktop_environment is defined and desktop_environment == "KDE"
