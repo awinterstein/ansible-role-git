@@ -81,6 +81,14 @@
     value: "true"
   when: git_rebase_default is defined and git_rebase_default == true
 
+- name: Configure git to sign commits
+  ini_file:
+    path: "{{ ansible_env.HOME }}/.gitconfig"
+    section: commit
+    option: gpgsign
+    value: "true"
+  when: git_rebase_default is defined and git_rebase_default == true
+
 - name: Enable colors for the bash prompt
   lineinfile:
     path: "{{ ansible_env.HOME }}/.bashrc"
@@ -111,7 +119,7 @@
     - git-clean-branches
   become: true
 
-- include: bash-git-prompt.yml
+- include_tasks: bash-git-prompt.yml
   when: git_enable_bash_prompt == true
 
 - include_tasks: config-kde.yml
